@@ -1,0 +1,17 @@
+# credentials and secrets
+.secrets
+dwh.cfg
+redshift.cfg
+
+# ide
+.vscode
+
+# env
+.env.yml
+
+# drafts
+*.drawio
+
+# logs
+logs/*
+!logs/.gitkeep
