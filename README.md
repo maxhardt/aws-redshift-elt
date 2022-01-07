@@ -1,4 +1,4 @@
-# Sparkify ELT on AWS Redshift for Analytics at Scale
+# Sparkify ELT on AWS Redshift
 
 This application processes data for the fictional Sparkify music streaming startup to support analytics use cases.
 
