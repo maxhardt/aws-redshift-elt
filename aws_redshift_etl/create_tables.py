@@ -4,9 +4,8 @@ import logging
 
 import psycopg2
 
-from aws_redshift_etl.sql_queries import (create_table_queries,
-                                          drop_table_queries,
-                                          drop_table_queries_no_staging)
+from aws_redshift_etl.queries import (create_table_queries, drop_table_queries,
+                                      drop_table_queries_no_staging)
 from aws_redshift_etl.utils import get_conn_string, load_config
 
 

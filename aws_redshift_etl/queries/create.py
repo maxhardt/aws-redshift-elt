@@ -9,23 +9,23 @@ analytics_schema = "create schema if not exists analytics"
 
 staging_events_table_create = """
 create table staging.s_events (
-    artist varchar (150),
-    auth varchar (100),
-    firstname varchar (100),
+    artist varchar (256),
+    auth varchar (128),
+    firstname varchar (128),
     gender varchar (10),
     iteminsession integer,
-    lastname varchar (100),
+    lastname varchar (128),
     length float,
-    level varchar (100),
-    location varchar (100),
+    level varchar (128),
+    location varchar (128),
     method varchar (10),
-    page varchar (100),
+    page varchar (128),
     registration bigint,
     sessionid integer,
-    song varchar (200),
+    song varchar (256),
     status integer,
     ts bigint,
-    useragent varchar (150),
+    useragent varchar (256),
     userid bigint
 )
 diststyle all
