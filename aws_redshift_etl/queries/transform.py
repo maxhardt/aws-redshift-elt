@@ -13,21 +13,21 @@ insert into analytics.f_songplays (
 )
 from staging.s_events as e
 left join (
-		select
-			any_value(d.song_id) as song_id,
-			any_value(d.artist_id) as artist_id,
-			d.artist_name,
-			d.title,
-			d.duration
-		from (
-			select distinct *
-			from staging.s_songs
-		) as d
-		group by d.title, d.artist_name, d.duration
-    ) as s
-    on e.artist = s.artist_name
-    and e.song = s.title
-    and e.length = s.duration
+	select
+		any_value(d.song_id) as song_id,
+		any_value(d.artist_id) as artist_id,
+		d.artist_name,
+		d.title,
+		d.duration
+	from (
+		select distinct *
+		from staging.s_songs
+	) as d
+	group by d.title, d.artist_name, d.duration
+) as s
+on e.artist = s.artist_name
+and e.song = s.title
+and e.length = s.duration
 where e.page = 'NextSong'
 """
 
