@@ -11,41 +11,24 @@ insert into analytics.f_songplays (
 	location,
 	user_agent
 )
-select
-	timestamp 'epoch' + e.ts / 1000 * interval '1 second' as start_time,
-	e.userid as user_id,
-	e.level,
-	s.song_id,
-	s.artist_id,
-	e.sessionid as session_id,
-	e.location as location,
-	e.useragent as user_agent
 from staging.s_events as e
-left join (  
-        select
-            dg.song_id,
-            dg.artist_id,
-            dg.artist_name,
-            dg.title,
-            dg.duration
-        from (
-            select
-                any_value(d.song_id) as song_id,
-                any_value(d.artist_id) as artist_id,
-                d.artist_name,
-                d.title,
-                d.duration
-            from (
-                select distinct *
-                from staging.s_songs
-            ) d
-            group by d.title, d.artist_name, d.duration
-            ) as dg
+left join (
+		select
+			any_value(d.song_id) as song_id,
+			any_value(d.artist_id) as artist_id,
+			d.artist_name,
+			d.title,
+			d.duration
+		from (
+			select distinct *
+			from staging.s_songs
+		) as d
+		group by d.title, d.artist_name, d.duration
     ) as s
     on e.artist = s.artist_name
     and e.song = s.title
     and e.length = s.duration
-where e.page = 'nextsong'
+where e.page = 'NextSong'
 """
 
 user_table_insert = """
