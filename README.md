@@ -1,4 +1,4 @@
-# Sparkify ELT on AWS Redshift
+# ELT and Dimensional Modeling with AWS Redshift
 
 This application processes data for the fictional Sparkify music streaming startup to support analytics use cases.
 
