@@ -11,23 +11,30 @@ insert into analytics.f_songplays (
 	location,
 	user_agent
 )
+select
+	timestamp 'epoch' + e.ts / 1000 * interval '1 second' as start_time,
+    e.userid as user_id,
+    e.level,
+    s.song_id,
+    s.artist_id,
+    e.sessionid as session_id,
+    e.location,
+    e.useragent as user_agent
 from staging.s_events as e
 left join (
-	select
-		any_value(d.song_id) as song_id,
-		any_value(d.artist_id) as artist_id,
-		d.artist_name,
-		d.title,
-		d.duration
-	from (
-		select distinct *
-		from staging.s_songs
-	) as d
-	group by d.title, d.artist_name, d.duration
-) as s
-on e.artist = s.artist_name
-and e.song = s.title
-and e.length = s.duration
+		select
+			any_value(d.song_id) as song_id,
+			any_value(d.artist_id) as artist_id,
+  			any_value(d.duration) as duration,
+			d.artist_name,
+			d.title
+		from (
+			select distinct *
+			from staging.s_songs
+		) as d
+		group by d.title, d.artist_name
+    ) as s
+    on e.artist = s.artist_name and e.song = s.title
 where e.page = 'NextSong'
 """
 
@@ -90,7 +97,7 @@ group by d.artist_id
 time_table_insert = """
 insert into analytics.d_time
 select
-	timestamp 'epoch' + dg.ts / 1000 * interval '1 second' as start_time,
+  	fg.start_time,
 	extract(hour from start_time) as hour,
 	extract(day from start_time) as day,
 	extract(week from start_time) as week,
@@ -98,12 +105,9 @@ select
 	extract(year from start_time) as year,
 	extract(weekday from start_time) as weekday
 from (
-	select d.ts
-	from (
-		select distinct *
-		from staging.s_events
-	) as d
-	where d.ts is not null
-	group by d.ts
-) as dg
+	select f.start_time
+	from analytics.f_songplays as f
+	where f.start_time is not null
+	group by f.start_time
+) as fg
 """
