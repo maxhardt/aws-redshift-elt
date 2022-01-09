@@ -40,20 +40,21 @@ where e.page = 'NextSong'
 
 user_table_insert = """
 insert into analytics.d_users
-select 
-	s.userid,
-    s.firstname,
-    s.lastname,
-    s.level,
-    s.gender
-from staging.s_events as s
-	inner join (	
-		select userid, max(ts) as latest
-		from staging.s_events
-		group by userid
-	) as t
-    	on t.latest = s.ts
-        and t.userid = s.userid
+select
+	w.userid,
+    w.firstname,
+    w.lastname,
+    w.level,
+    w.gender
+from (
+	select
+		userid,
+		level,
+		row_number() over(partition by userid order by ts desc) as rank
+	from staging.s_events
+	where page = 'NextSong'
+) as w
+where rank = 1
 """
 
 song_table_insert = """
